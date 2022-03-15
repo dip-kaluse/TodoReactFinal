@@ -1,0 +1,25 @@
+* {
+  padding: 0%;
+  margin: 0%;
+}
+.container {
+  padding: 10px;
+  background-image: url("Images/pexels-tara-winstead-8386687.jpg");
+  background-size: cover;
+  width: auto;
+  height: 100vh;
+}
+.navbar-brand {
+  margin: auto;
+  margin-top: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: black;
+  background-color: lightyellow;
+  border-radius: 10px;
+  font-size: 25px;
+  font-weight: bold;
+}
