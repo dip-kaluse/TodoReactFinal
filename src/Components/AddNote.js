@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useReducer } from "react";
 import DatePicker from "react-datepicker";
 import "./AddNote.css";
+import { v4 } from "uuid";
 import { Link } from "react-router-dom";
 function AddNote() {
   const [collect, setCollect] = useState(
@@ -23,7 +24,7 @@ function AddNote() {
     // e.preventDefault();
     console.log("first");
     if (titles === "" || !date) return alert("please fill all field");
-    collect.push({ titles, date, note, status });
+    collect.push({ titles, date, note, status, id: v4() });
     localStorage.setItem("one", JSON.stringify(collect));
     console.log(date);
     setDate("");

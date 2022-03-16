@@ -1,6 +1,13 @@
 .container1 {
   margin-top: 20px;
 }
+.mainbody {
+  padding: 10px;
+  background-image: url("Images/pexels-tara-winstead-8386687.jpg");
+  background-size: cover;
+  width: auto;
+  height: 100vh;
+}
 .sticky {
   /* position: absolute; 
   right: 0;
@@ -49,28 +56,53 @@ ul {
 li {
   font-size: 20px;
 }
-.handle{
-    
+.handle {
 }
 .completed {
   position: absolute;
-  width: 300px;
-  height: 300px;
-  bottom: 0px;
-  right: 25%;
-  left: 50%;
-  margin-left: -150px;
+  padding: 10px;
+  top: 80%;
+  background-color: aquamarine;
+  left: 85%;
+  border: 1px solid rgb(5, 5, 5);
+  border-radius: 10px;
+  cursor: pointer;
 }
 .addno1 {
   position: absolute;
-  width: 300px;
-  height: 200px;
-  bottom: 0px;
-  right: 25%;
-  left: 50%;
-  margin-left: -150px;
+  padding: 3 px;
+  top: 90%;
+  background-color: aquamarine;
+  left: 86.3%;
+  border: 1px solid rgb(5, 5, 5);
+  border-radius: 10px;
 }
 .addno:hover {
   border-color: aqua;
   color: black;
+}
+.history {
+  position: fixed;
+  padding: 20px;
+  bottom: 300px;
+  left: 37%;
+  right: auto;
+  border: 2px solid #0c9;
+  right: auto;
+  background-color: white;
+  color: #000;
+  border-radius: 20px;
+  text-align: center;
+}
+.history td {
+  padding: 5px;
+}
+.dbody {
+  filter: blur(10px);
+  pointer-events: none;
+  padding: 10px;
+  background-image: url("Images/pexels-tara-winstead-8386687.jpg");
+  background-size: cover;
+  width: auto;
+  height: 100vh;
 }
