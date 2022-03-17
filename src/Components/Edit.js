@@ -1,23 +1,27 @@
 import React, { useEffect, useState, useReducer } from "react";
 import DatePicker from "react-datepicker";
+
 import "./AddNote.css";
 import { v4 } from "uuid";
 import { Link, useLocation, useParams } from "react-router-dom";
-function AddNote() {
+function Edit() {
   const [collect, setCollect] = useState(
-    JSON.parse(localStorage.getItem("one")) || []
+    JSON.parse(localStorage.getItem("one")) || ""
   );
   const { id } = useParams();
+  const [update, setUpdate] = useState(
+    JSON.parse(localStorage.getItem("three")) || ""
+  );
 
-  console.log(id);
   const [edit, setEdit] = useState([]);
   const [count, setCount] = useState(0);
   const [note, setNote] = useState("");
   const [titles, setTitles] = useState("");
   const [date, setDate] = useState("");
-  const [submitStatus, setSubmitStatus] = useState(false);
   const [status, setStatus] = useState("pending ");
 
+  let arr = collect;
+  console.log(arr);
   const Cancel = () => {
     setDate("");
     setTitles("");
@@ -25,12 +29,16 @@ function AddNote() {
     // console.log("first");
   };
 
-  const Submitt = (e) => {
-    // e.preventDefault();
+  const updatee = (e) => {
     if (titles === "" || !date) return alert("please fill all field");
-    collect.push({ titles, date, note, status, id: v4() });
+    let ca = "";
+    for (let j = 0; j < collect.length; j++) {
+      if (collect[j].id === id) {
+        arr[j] = { titles: titles, note: note, date: date, id: v4() };
+      }
+    }
+    console.log(arr);
     localStorage.setItem("one", JSON.stringify(collect));
-    console.log(date);
     setDate("");
     setTitles("");
     setNote("");
@@ -145,8 +153,16 @@ function AddNote() {
     }
   };
   useEffect(() => {
-    // <Link to="/display"></Link>;
+    let ca = "";
+    for (let j = 0; j < collect.length; j++) {
+      if (collect[j].id === id) {
+        setNote(collect[j].note);
+        setTitles(collect[j].titles);
+      }
+    }
+    <Link to="/display"></Link>;
   }, [count]);
+  console.log(update);
   return (
     <div className="Background">
       <div className="Cener" autoComplete="off">
@@ -157,16 +173,17 @@ function AddNote() {
               <input
                 className="input"
                 type="text"
-                placeholder="Title"
+                placeholder={titles}
                 name="TaskTaker"
                 value={titles}
                 onChange={(e) => setTitles(e.target.value)}
               />
             </div>
+
             <div className="inputfield">
               <textarea
                 className="textarea"
-                placeholder="Note"
+                placeholder={note}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               ></textarea>
@@ -200,11 +217,11 @@ function AddNote() {
                 <button
                   // type="submit"
                   onClick={() => {
-                    Submitt();
+                    updatee();
                   }}
                   className="btn"
                 >
-                  Add
+                  Update
                 </button>
               </div>
             </Link>
@@ -228,4 +245,4 @@ function AddNote() {
   );
 }
 
-export default AddNote;
+export default Edit;

@@ -13,8 +13,8 @@
   right: 0;
   z-index: 150;  */
   transform: rotate(5deg);
-  width: 200px;
-  min-height: 150px;
+  width: 250px;
+  min-height: 170px;
   margin: 10px 10px 10px;
   padding: 10px;
   font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue",
@@ -105,4 +105,11 @@ li {
   background-size: cover;
   width: auto;
   height: 100vh;
+}
+.rightsign {
+}
+.Edit {
+  font-size: 10px;
+  margin-left: 30px;
+  margin-top: 5px;
 }
