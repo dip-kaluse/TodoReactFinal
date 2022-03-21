@@ -3,7 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 import "./Display.css";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toBeInTheDocument } from "@testing-library/jest-dom/dist/matchers";
+toast.configure();
 let initComplete = [];
 let compl = JSON.parse(localStorage.getItem("two"));
 if (compl) {
@@ -17,11 +20,15 @@ function Display() {
   const [collect, setCollect] = useState(
     JSON.parse(localStorage.getItem("one")) || []
   );
+  const notifydelete = () => {
+    toast.error("Task Deleted", { autoClose: 3000 });
+  };
   let [showCompleted, setShowCompleted] = useState(true);
   const [completed, setCompleted] = useState(
     JSON.parse(localStorage.getItem("two")) || []
   );
   const [count, setCount] = useState(0);
+  const [count2, setCount2] = useState(0);
 
   const handleCompletedDelete = (id) => {
     let newCompleted = completed.filter((obj, index) => obj.id !== id);
@@ -34,39 +41,53 @@ function Display() {
     // console.log("first");
   };
   const handledelete = (e) => {
-    let ca2 = collect.filter((objtask, j) => e !== j);
-
-    setCollect(ca2);
-    localStorage.setItem("one", JSON.stringify(ca2));
-    setCount((prev) => prev + 1);
+    let resultdel = window.confirm("You Want To Delete?");
+    if (resultdel) {
+      let ca2 = collect.filter((objtask, j) => e !== j);
+      setCollect(ca2);
+      localStorage.setItem("one", JSON.stringify(ca2));
+      notifydelete();
+    }
   };
   const sComplete = (sts, i) => {
-    let ca = "";
-    for (let j = 0; j < collect.length; j++) {
-      if (i === j) {
-        ca = collect[j];
+    let resultdel = window.confirm("This Task Is Completed?");
+    if (resultdel) {
+      let ca = "";
+      for (let j = 0; j < collect.length; j++) {
+        if (i === j) {
+          ca = collect[j];
+        }
       }
+      console.log(ca);
+      completed.push(ca);
+      console.log(completed);
+      localStorage.setItem("two", JSON.stringify(completed));
+      let ca2 = collect.filter((objtask, j) => i !== j);
+      setCollect(ca2);
+      localStorage.setItem("one", JSON.stringify(ca2));
+      setCount((prev) => prev + 1);
     }
-    console.log(ca);
-    completed.push(ca);
-    console.log(completed);
-    localStorage.setItem("two", JSON.stringify(completed));
-    let ca2 = collect.filter((objtask, j) => i !== j);
-    setCollect(ca2);
-    localStorage.setItem("one", JSON.stringify(ca2));
-    setCount((prev) => prev + 1);
   };
+
   const handleOnDragEnd = (result) => {
+    const { source, destination } = result;
     if (!result.destination) return;
+
+    // if (
+    //   destination.droppableId === source.droppableId &&
+    //   destination.index === source.index
+    // )
+    //   return;
     localList = JSON.parse(localStorage.getItem("one"));
-    const items = Array.from(localList);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    updatelocalList(items);
-    for (let i = 0; i < items.length; i++) {
-      items[i].sortpos = i;
+    const itemss = Array.from(localList);
+    const [reorderedItem] = itemss.splice(result.source.index, 1);
+    itemss.splice(result.destination.index, 0, reorderedItem);
+    updatelocalList(itemss);
+    for (let i = 0; i < itemss.length; i++) {
+      itemss[i].sortpos = i;
     }
-    localStorage.setItem("list", JSON.stringify(items));
+    localStorage.setItem("one", JSON.stringify(itemss));
+    setCollect(itemss);
   };
 
   useEffect(() => {
@@ -74,102 +95,126 @@ function Display() {
   }, [count]);
   return (
     <div className="mainbody">
-      <div className={showCompleted ? "dbody" : "nothing"}>
-        <div className="container1">
-          <ul>
-            {collect.map((item, index) => {
-              return (
-                <ul className="sticky" key={index}>
-                  <li>
-                    <button
-                      className="btn"
-                      onClick={() => {
-                        sComplete(item.status, index);
-                      }}
-                    >
-                      &#8730;
-                    </button>
-                    <button
-                      className="btn"
-                      onClick={() => {
-                        handledelete(index);
-                      }}
-                    >
-                      &times;
-                    </button>
-                  </li>
-                  <li>date:-{item.date}</li>
-                  <li>title:-{item.titles.substring(0, 5)}...</li>
-                  <li>note:-{item.note.substring(0, 15)}...</li>
-                  <Link to={`/Edit/${item.id}`}>
-                    <li className="handle">
-                      <button className="btn float-right" onClick={() => {}}>
-                        edit
-                      </button>
-                    </li>
-                  </Link>
-                </ul>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
-
-      <div
-        className="completed"
-        onClick={() => {
-          setCount((prev) => prev + 1);
-        }}
-      >
-        Completed({completed.length})
-      </div>
-      <div className="addno1">
-        <Link to="/AddNote">
-          <button className="btn addno">AddNote</button>
-        </Link>
-      </div>
-      <div>
-        {showCompleted ? (
-          <div className="history">
-            <table>
-              <tbody>
-                <tr>
-                  <td>titles</td> <td>date</td> <td> note</td>
-                  <td>X</td>
-                </tr>
-
-                {completed.map((item, index) => {
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <div className={showCompleted ? "dbody" : "nothing"}>
+          <Droppable droppableId="TodosList">
+            {(provided) => (
+              <div
+                className="container1"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {collect.map((item, index) => {
                   return (
-                    <tr key={index}>
-                      <td>{item.titles}</td>
-                      <td> {item.date}</td>
-                      <td>{item.note}</td>
-                      <td>
-                        {
-                          <button
-                            className="btn"
-                            onClick={() => {
-                              handleCompletedDelete(item.id);
-                            }}
-                          >
-                            X
-                          </button>
-                        }
-                      </td>
-                    </tr>
+                    <Draggable draggableId={item.id.toString()} index={index}>
+                      {(provided) => (
+                        <div
+                          className="sticky"
+                          key={item.id}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                        >
+                          <ul>
+                            <li>
+                              <button
+                                className="btn"
+                                onClick={() => {
+                                  sComplete(item.status, index);
+                                }}
+                              >
+                                &#8730;
+                              </button>
+                              <button
+                                className="btn"
+                                onClick={() => {
+                                  handledelete(index);
+                                }}
+                              >
+                                &times;
+                              </button>
+                            </li>
+                            <li>date:-{item.date}</li>
+                            <li>title:-{item.titles.substring(0, 5)}...</li>
+                            <li>note:-{item.note.substring(0, 15)}...</li>
+                            <Link to={`/Edit/${item.id}`}>
+                              <li className="handle">
+                                <button
+                                  className="btn float-right"
+                                  onClick={() => {}}
+                                >
+                                  edit
+                                </button>
+                              </li>
+                            </Link>
+                          </ul>
+                          {/* {provided.placeholder} */}
+                        </div>
+                      )}
+                    </Draggable>
                   );
                 })}
-              </tbody>
-            </table>{" "}
-          </div>
-        ) : (
-          <div></div>
-        )}
-      </div>
-      <div>
-        {console.log(collect.length)}
-        {collect.length === 0 ? navigate("/") : console.log("first")}
-      </div>
+              </div>
+            )}
+          </Droppable>
+        </div>
+
+        <div
+          className="completed"
+          onClick={() => {
+            setCount((prev) => prev + 1);
+          }}
+        >
+          Completed({completed.length})
+        </div>
+        <div className="addno1">
+          <Link to="/AddNote">
+            <button className="btn addno">AddNote</button>
+          </Link>
+        </div>
+        <div>
+          {showCompleted ? (
+            <div className="history">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>titles</td> <td>date</td> <td> note</td>
+                    <td>X</td>
+                  </tr>
+
+                  {completed.map((item, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{item.titles}</td>
+                        <td> {item.date}</td>
+                        <td>{item.note}</td>
+                        <td>
+                          {
+                            <button
+                              className="btn"
+                              onClick={() => {
+                                handleCompletedDelete(item.id);
+                              }}
+                            >
+                              X
+                            </button>
+                          }
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>{" "}
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
+        <div>
+          {console.log(collect.length)}
+          {collect.length === 0 ? navigate("/") : console.log("first")}
+        </div>
+      </DragDropContext>
     </div>
   );
 }

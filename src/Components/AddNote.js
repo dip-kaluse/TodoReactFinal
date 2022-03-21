@@ -2,7 +2,10 @@ import React, { useEffect, useState, useReducer } from "react";
 import DatePicker from "react-datepicker";
 import "./AddNote.css";
 import { v4 } from "uuid";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link, useLocation, useParams } from "react-router-dom";
+toast.configure();
 function AddNote() {
   const [collect, setCollect] = useState(
     JSON.parse(localStorage.getItem("one")) || []
@@ -18,6 +21,12 @@ function AddNote() {
   const [submitStatus, setSubmitStatus] = useState(false);
   const [status, setStatus] = useState("pending ");
 
+  const notifyadd = () => {
+    toast.success("Note Added", { autoClose: 3000 });
+  };
+  const notifynoadd = () => {
+    toast.error("Note Not Added", { autoClose: 3000 });
+  };
   const Cancel = () => {
     setDate("");
     setTitles("");
@@ -27,7 +36,10 @@ function AddNote() {
 
   const Submitt = (e) => {
     // e.preventDefault();
-    if (titles === "" || !date) return alert("please fill all field");
+    if (titles === "" || !date) return notifynoadd();
+    else {
+      notifyadd();
+    }
     collect.push({ titles, date, note, status, id: v4() });
     localStorage.setItem("one", JSON.stringify(collect));
     console.log(date);

@@ -1,6 +1,6 @@
-.container1 {
+/* .container1 {
   margin-top: 20px;
-}
+} */
 .mainbody {
   padding: 10px;
   background-image: url("Images/pexels-tara-winstead-8386687.jpg");
@@ -27,6 +27,11 @@
   text-align: center;
   display: inline-block;
   vertical-align: top;
+  transition: 0.2s;
+}
+.sticky:hover {
+  box-shadow: 0 0 5px black;
+  transform: scale(1.03);
 }
 .sticky:before,
 .sticky:after {

@@ -4,7 +4,7 @@ import "./Home.css";
 
 function Home() {
   return (
-    <div className="container">
+    <div className="container3">
       <Link to="/AddNote">
         <button className=" navbar-brand btn btn-primary">AddNote</button>
       </Link>

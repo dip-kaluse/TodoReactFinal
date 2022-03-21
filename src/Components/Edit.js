@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useReducer } from "react";
 import DatePicker from "react-datepicker";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./AddNote.css";
 import { v4 } from "uuid";
 import { Link, useLocation, useParams } from "react-router-dom";
+toast.configure();
 function Edit() {
   const [collect, setCollect] = useState(
     JSON.parse(localStorage.getItem("one")) || ""
@@ -46,7 +48,9 @@ function Edit() {
   function addDays(theDate, days) {
     return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
   }
-
+  const notifyupdate = () => {
+    toast.success("Note Ready For Update", { autoClose: 3000 });
+  };
   const optDate = (e) => {
     const current = new Date();
     const Today = addDays(new Date(), 0);
@@ -152,12 +156,14 @@ function Edit() {
         break;
     }
   };
+
   useEffect(() => {
     let ca = "";
     for (let j = 0; j < collect.length; j++) {
       if (collect[j].id === id) {
         setNote(collect[j].note);
         setTitles(collect[j].titles);
+        notifyupdate();
       }
     }
     <Link to="/display"></Link>;
