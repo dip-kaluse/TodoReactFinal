@@ -12,7 +12,6 @@ function AddNote() {
   );
   const { id } = useParams();
 
-  console.log(id);
   const [edit, setEdit] = useState([]);
   const [count, setCount] = useState(0);
   const [note, setNote] = useState("");
@@ -56,6 +55,7 @@ function AddNote() {
     const Today = addDays(new Date(), 0);
     const Tomorrow = addDays(new Date(), 1);
     const Week = addDays(new Date(), 7);
+
     switch (e) {
       case "1":
         if (Today.getMonth() < 11) {
@@ -111,17 +111,23 @@ function AddNote() {
         if (Week.getMonth() < 11) {
           if (Week.getDate() < 10) {
             setDate(
-              `${Week.getFullYear()}-${0}${Week.getMonth()}-${0}${Week.getDate()}`
+              `${Week.getFullYear()}-${0}${
+                Week.getMonth() + 1
+              }-${0}${Week.getDate()}`
             );
           } else {
             setDate(
-              `${Week.getFullYear()}-${0}${Week.getMonth()}-${Week.getDate()}`
+              `${Week.getFullYear()}-${0}${
+                Week.getMonth() + 1
+              }-${Week.getDate()}`
             );
           }
         } else {
           if (Week.getDate() < 10) {
             setDate(
-              `${Week.getFullYear()}-${Week.getMonth()}-${0}${Week.getDate()}`
+              `${Week.getFullYear()}-${
+                Week.getMonth() + 1
+              }-${0}${Week.getDate()}`
             );
           }
         }
@@ -159,6 +165,7 @@ function AddNote() {
   useEffect(() => {
     // <Link to="/display"></Link>;
   }, [count]);
+  console.log(date);
   return (
     <div className="Background">
       <div className="Cener" autoComplete="off">

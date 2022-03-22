@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AddNote.css";
 import { v4 } from "uuid";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 toast.configure();
 function Edit() {
   const [collect, setCollect] = useState(
@@ -21,6 +21,7 @@ function Edit() {
   const [titles, setTitles] = useState("");
   const [date, setDate] = useState("");
   const [status, setStatus] = useState("pending ");
+  const navigate = useNavigate();
 
   let arr = collect;
   console.log(arr);
@@ -28,11 +29,14 @@ function Edit() {
     setDate("");
     setTitles("");
     setNote("");
-    // console.log("first");
+    notifycancel();
   };
 
   const updatee = (e) => {
     if (titles === "" || !date) return alert("please fill all field");
+    else {
+      notifydone();
+    }
     let ca = "";
     for (let j = 0; j < collect.length; j++) {
       if (collect[j].id === id) {
@@ -44,12 +48,19 @@ function Edit() {
     setDate("");
     setTitles("");
     setNote("");
+    navigate("/display");
   };
   function addDays(theDate, days) {
     return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
   }
   const notifyupdate = () => {
     toast.success("Note Ready For Update", { autoClose: 3000 });
+  };
+  const notifydone = () => {
+    toast.success("Note Updated", { autoClose: 3000 });
+  };
+  const notifycancel = () => {
+    toast.error("Note Updated Cancle", { autoClose: 3000 });
   };
   const optDate = (e) => {
     const current = new Date();
@@ -111,17 +122,23 @@ function Edit() {
         if (Week.getMonth() < 11) {
           if (Week.getDate() < 10) {
             setDate(
-              `${Week.getFullYear()}-${0}${Week.getMonth()}-${0}${Week.getDate()}`
+              `${Week.getFullYear()}-${0}${
+                Week.getMonth() + 1
+              }-${0}${Week.getDate()}`
             );
           } else {
             setDate(
-              `${Week.getFullYear()}-${0}${Week.getMonth()}-${Week.getDate()}`
+              `${Week.getFullYear()}-${0}${
+                Week.getMonth() + 1
+              }-${Week.getDate()}`
             );
           }
         } else {
           if (Week.getDate() < 10) {
             setDate(
-              `${Week.getFullYear()}-${Week.getMonth()}-${0}${Week.getDate()}`
+              `${Week.getFullYear()}-${
+                Week.getMonth() + 1
+              }-${0}${Week.getDate()}`
             );
           }
         }
@@ -218,20 +235,20 @@ function Edit() {
                 <option value="30">Next Month</option>
               </select>
             </div>
+
+            <div className="inputfield">
+              <button
+                // type="submit"
+                onClick={() => {
+                  updatee();
+                }}
+                className="btn"
+              >
+                Update
+              </button>
+            </div>
+
             <Link to="/display">
-              <div className="inputfield">
-                <button
-                  // type="submit"
-                  onClick={() => {
-                    updatee();
-                  }}
-                  className="btn"
-                >
-                  Update
-                </button>
-              </div>
-            </Link>
-            <Link to="/Display">
               <div className="inputfield">
                 <button
                   type="reset"

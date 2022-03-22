@@ -14,9 +14,7 @@ import Display from "./Components/Display";
 import Edit from "./Components/Edit";
 function App() {
   const { id } = useParams();
-  const [collect, setCollect] = useState(
-    JSON.parse(localStorage.getItem("one")) || []
-  );
+  
   return (
     <>
       <Router>
